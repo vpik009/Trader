@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/*
+  Palette: Ruri / Yamabuki, from the traditional Japanese colour dictionary.
+  Ratios are WCAG contrast against the partner noted.
+*/
+:root {
+  color-scheme: light;
+  --bg: #ebf6f7; /* 藍白 Aijiro */
+  --surface: #ffffff;
+  --text: #192236; /* 紺 Kon, 14.40:1 on bg */
+  --muted: #4d646c; /* 舛花色 Masuhana, 5.68:1 on bg */
+  --primary: #1f4788; /* 瑠璃色 Ruri, 8.23:1 on bg */
+  --on-primary: #ffffff; /* 9.07:1 on primary */
+  --link: #1f4788;
+  --accent: #ffa400; /* 山吹色 Yamabuki, fill only; text on it 7.98:1 */
+  --on-accent: #192236;
+  --star-stroke: #192236;
+  --line: #c9dfe2; /* derived: Mizu-iro 30% into white, decorative only */
+  --field-line: #4d646c; /* 5.68:1, input borders */
+  --alert: #bc2d29; /* 銀朱 Ginshu, 5.92:1 on white */
+  --success: #1e6b45; /* derived: Aotake-iro darkened; 6.47:1 on white, 5.87:1 on bg */
+  --focus: #1f4788;
+
+  /* The band is the same in both themes */
+  --band: #1b294b; /* 瑠璃紺 Rurikon */
+  --on-band: #ebf6f7; /* 13.01:1 */
+  --on-band-muted: #86aba5; /* 水色 Mizu-iro, 5.72:1 on band */
+  --band-accent: #ffb61e; /* 藤黄 Tō'ō, 8.16:1 on band */
+  --band-pattern: #86aba5; /* 水色 Mizu-iro, decorative */
+
+  --s-1: 8px;
+  --s-2: 16px;
+  --s-3: 24px;
+  --s-4: 32px;
+  --s-5: 40px;
+  --s-6: 48px;
+  --s-8: 64px;
+  --s-12: 96px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #181b26; /* 褐色 Kachi-iro */
+    --surface: #1b294b; /* 瑠璃紺 Rurikon */
+    --text: #ebf6f7; /* 15.58:1 on bg, 13.01:1 on surface */
+    --muted: #86aba5; /* 水色 Mizu-iro, 6.85:1 on bg, 5.72:1 on surface */
+    --primary: #4d8fac; /* 空色 Sora-iro; dark text on it 4.77:1 */
+    --on-primary: #181b26;
+    --link: #82b1c5; /* derived: Sora-iro 70% into white, 7.39:1 on bg */
+    --accent: #ffb61e; /* 藤黄 Tō'ō, 9.78:1 on bg */
+    --on-accent: #181b26;
+    --star-stroke: #ffb61e;
+    --line: #2a3756; /* derived, decorative only */
+    --field-line: #86aba5;
+    --alert: #f7665a; /* 甚三紅 Jinzamomi, 5.72:1 on bg */
+    --success: #7fc29b; /* derived: Byakuroku-iro, 8.25:1 on bg */
+    --focus: #ffb61e;
+    --band: #111a30; /* derived: Rurikon darkened, so the band still reads as a band */
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-link: var(--link);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-line: var(--line);
+  --color-field-line: var(--field-line);
+  --color-alert: var(--alert);
+  --color-success: var(--success);
+  --color-band: var(--band);
+  --color-on-band: var(--on-band);
+  --color-on-band-muted: var(--on-band-muted);
+  --color-band-accent: var(--band-accent);
+  --font-display: "Bricolage Grotesque Variable", "Arial Narrow", sans-serif;
+  --font-sans: "Figtree Variable", "Trebuchet MS", sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Page width: 1120 max, side padding 16 / 24 / 40 */
+.wrap {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: var(--s-2);
+}
+@media (min-width: 640px) {
+  .wrap {
+    padding-inline: var(--s-3);
+  }
+}
+@media (min-width: 1024px) {
+  .wrap {
+    padding-inline: var(--s-5);
+  }
+}
+
+/* Full-bleed lapis band with a faint star lattice behind the content */
+.band {
+  --focus: var(--band-accent);
+  --accent: var(--band-accent);
+  --star-stroke: var(--band-accent);
+  --on-accent: #192236; /* 紺 Kon on Tō'ō */
+  background-color: var(--band);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 18l1.8 4.2 4.2 1.8-4.2 1.8L24 30l-1.8-4.2L18 24l4.2-1.8z' fill='%2386aba5' fill-opacity='.12'/%3E%3C/svg%3E");
+  color: var(--on-band);
+}
+
+/* Star picker: focus ring on the label when its hidden radio has keyboard focus */
+.star-option:has(input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@keyframes pop {
+  50% {
+    transform: scale(1.18);
+  }
+}
+.star-pop {
+  animation: pop 180ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

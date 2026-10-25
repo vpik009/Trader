@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Only what's needed to show who rated what. No email, no password.
+model User {
+  id        String   @id // "<provider>:<subject>", e.g. "google:1234"
+  name      String
+  image     String?
+  createdAt DateTime @default(now())
+  ratings   Rating[]
+}
+
+// Local cache of IGDB game data, so pages don't hit IGDB on every view.
+model Game {
+  id           Int      @id // IGDB game id
+  name         String
+  slug         String
+  coverId      String?
+  releaseYear  Int?
+  summary      String?
+  genres       String? // comma-separated
+  steamAppId   Int?
+  criticScore  Float? // IGDB aggregated critic rating (IGN, GameSpot, ...), 0-100
+  criticCount  Int?
+  igdbScore    Float? // IGDB user rating, 0-100
+  igdbCount    Int?
+  fetchedAt    DateTime @default(now())
+  ratings      Rating[]
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  gameId    Int
+  stars     Int // 1 awful, 2 meh, 3 good, 4 amazing
+  review    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId])
+  @@index([gameId])
+}
